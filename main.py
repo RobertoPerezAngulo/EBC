@@ -1,5 +1,35 @@
 import pandas as pd
+from datetime import date
 import pyodbc
+
+
+# valor de mesApi anio
+def get_value_api(date_value):
+    date = pd.to_datetime(date_value)
+    if date.month == 12 and date.year == 2023:
+        return 177
+    elif date.month == 11 and date.year == 2023:
+        return 176
+    elif date.month == 10 and date.year == 2023:
+        return 174
+    elif date.month == 9 and date.year == 2023:
+        return 172
+    elif date.month == 8 and date.year == 2023:
+        return 171
+    elif date.month == 7 and date.year == 2023:
+        return 169
+    elif date.month == 6 and date.year == 2023:
+        return 168
+    elif date.month == 5 and date.year == 2023:
+        return 166
+    elif date.month == 4 and date.year == 2023:
+        return 165
+    elif date.month == 3 and date.year == 2023:
+        return 163
+    elif date.month == 2 and date.year == 2023:
+        return 162
+    elif date.month == 1 and date.year == 2023:
+        return 159
 
 def get_connection():
     server = '192.168.11.4\developer'
@@ -38,14 +68,23 @@ def get_consulta(marca, modelo, anio):
     conn.close()
     return texto
 
-archivo = 'data.xlsx'
-df = pd.read_excel(archivo)
-# desde el primero valor hasta el 10 
-# df = df.iloc[0:10]
 
-for index, row in df.iterrows():
-    valor = get_consulta(row[6], row[8], row[9])
-    print('Valor obtenido de la query', valor)
-    df.at[index,"Versiones"] = valor
+def main():
+    archivo = 'data.xlsx'
+    df = pd.read_excel(archivo)
+    # desde el primero valor hasta el 10 
+    # df = df.iloc[0:10]
+
+    for index, row in df.iterrows():
+        valor = get_consulta(row.iloc[6], row.iloc[8], row.iloc[9])
+        print('Valor obtenido de la query', valor)
+        df.at[index,"Versiones"] = valor
+        print('Valor de fecha de venta', row.iloc[3])
+        value_api= get_value_api(row.iloc[3])
+        df.at[index,"anioValue"] = value_api
     
-df.to_excel('data_resultados.xlsx', index=False, header=True)
+    df.to_excel('data_resultados.xlsx', index=False, header=True)
+
+
+
+main()
